@@ -61,7 +61,7 @@ def interpretacao_sentenca(counts_da_nova_sentenca,nova_sentenca):
             salva_csv(dataset)
             print("Obrigado!")
         else:
-            intencoes_selection = '[1]Consultar saldo da conta [2]Interagir com a luz ou o ar-condicionado [3]Obter informações relativas ao clima[4]Digitei Abobrinha'
+            intencoes_selection = '[1]Consultar saldo da conta [2]Interagir com a luz ou o ar-condicionado [3]Obter informações relativas ao clima [4]Digitei Abobrinha'
             print(f"Poderia me informar qual dessas era sua intenção?{intencoes_selection}")
             resp_intencao = checa_input_int(input())
             if int(resp_intencao) != 4:
