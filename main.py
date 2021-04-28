@@ -36,30 +36,45 @@ dataset_original =  dataset_original
 
 def salva_csv(dataframe):
     dataframe.to_csv('sentencas_mod.csv',index=False)
-    
+
+def checa_input_int(input_resp=str):
+    while True:
+        try:
+            resposta = int(input_resp)
+            break
+        except:
+            print("Essa resposta não é valida")
+            input_resp = input()
+    return resposta
+
+
 def interpretacao_sentenca(counts_da_nova_sentenca,nova_sentenca):
-    #print(model.classes_)
-    #print(model.predict_proba(counts_da_nova_sentenca[0])[0])
     global dataset
     proba = model.predict_proba(counts_da_nova_sentenca[0])[0]
-    result = np.where(proba>=0.3)
-    #print(result[0])
+    result = np.where(proba>=0.5)
     if len(result[0]) > 0:
+        #checa_input_int(f"A sua intenção é: {model.predict(counts_da_nova_sentenca[0])[0]}? Digite 1 para confirmar ou 0 para negar")
         print(f"A sua intenção é: {model.predict(counts_da_nova_sentenca[0])[0]}? Digite 1 para confirmar ou 0 para negar")
-        confirmacao = input()
-        #print(confirmacao)
+        confirmacao = checa_input_int(input())
         if int(confirmacao) == 1:
             dataset = dataset.append({"Intenção":model.predict(counts_da_nova_sentenca[0])[0],"Sentença":nova_sentenca},ignore_index=True)
             salva_csv(dataset)
             print("Obrigado!")
         else:
-            intencoes_selection = '[1]Consultar saldo da conta [2]Interagir com a luz ou o ar-condicionado [3]Obter informações relativas ao clima'
+            intencoes_selection = '[1]Consultar saldo da conta [2]Interagir com a luz ou o ar-condicionado [3]Obter informações relativas ao clima[4]Digitei Abobrinha'
             print(f"Poderia me informar qual dessas era sua intenção?{intencoes_selection}")
-            resp_intencao = input()
+            resp_intencao = checa_input_int(input())
+            if int(resp_intencao) != 4:
+                dataset = dataset.append({"Intenção":model.classes_[int(resp_intencao)-1],"Sentença":nova_sentenca},ignore_index=True)
+                salva_csv(dataset)
+    else:
+        print("Não Entendi...Qual era sua intenção?")
+        intencoes_selection = '[1]Consultar saldo da conta [2]Interagir com a luz ou o ar-condicionado [3]Obter informações relativas ao clima [4]Digitei Abobrinha'
+        print(f"{intencoes_selection}")
+        resp_intencao = checa_input_int(input())
+        if int(resp_intencao) != 4:
             dataset = dataset.append({"Intenção":model.classes_[int(resp_intencao)-1],"Sentença":nova_sentenca},ignore_index=True)
             salva_csv(dataset)
-    else:
-        print("Não Entendi...Pode escrever de outra maneira?")
         
 def main(dataset,model):
     Sentenca = dataset.iloc[:,1]
