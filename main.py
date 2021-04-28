@@ -72,9 +72,10 @@ def interpretacao_sentenca(counts_da_nova_sentenca,nova_sentenca):
         intencoes_selection = '[1]Consultar saldo da conta [2]Interagir com a luz ou o ar-condicionado [3]Obter informações relativas ao clima [4]Digitei Abobrinha'
         print(f"{intencoes_selection}")
         resp_intencao = checa_input_int(input())
-        if int(resp_intencao) != 4:
+        if int(resp_intencao) in [1,2,3]:
             dataset = dataset.append({"Intenção":model.classes_[int(resp_intencao)-1],"Sentença":nova_sentenca},ignore_index=True)
             salva_csv(dataset)
+        
         
 def main(dataset,model):
     Sentenca = dataset.iloc[:,1]
